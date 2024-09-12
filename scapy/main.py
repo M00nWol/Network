@@ -1,13 +1,15 @@
-from scapy.all import sniff
+from scapy.all import sniff, wrpcap
 
-# packer capture and show details
+# list to save packets
+packets = []
+
+# append packet to list
 def packet_callback(packet):
-    if packet.haslayer("IP"):
-        print(f"Source IP: {packet['IP'].src}")
-        print(f"Destination IP: {packet['IP'].dst}")
-        print(f"Protocol: {packet['IP'].proto}")
-        print("-" * 50)
+    packets.append(packet)
+    print(packet.summary)
 
-# capture packet in network interface
-# filer : TCP
+# capture packet
 sniff(filter="tcp",prn=packet_callback, count=10)
+
+# save packets as pcap file
+wrpcap("./captured_packets.pcap", packets)
