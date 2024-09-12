@@ -1,3 +1,5 @@
+# capture_packets.py
+
 from scapy.all import sniff, wrpcap
 
 # list to save packets
@@ -30,7 +32,10 @@ def packet_callback(packet):
 
 
 # capture packet
-sniff(prn=packet_callback, count=50)
+# GUI 사용 안 할 때를 대비해 count와 filter 설정한 것
+# => GUI 코드와 독립적으로 실행 가능
+def start_capture(count=10, filter="tcp"):
+    sniff(filter=filter,prn=packet_callback, count=count)
 
-# save packets as pcap file
-wrpcap("./captured_packets.pcap", packets)
+    # save packets as pcap file
+    wrpcap("./captured_packets.pcap", packets)
