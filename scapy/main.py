@@ -9,4 +9,5 @@ def packet_callback(packet):
         print("-" * 50)
 
 # capture packet in network interface
-sniff(prn=packet_callback, count=10)
+# filer : TCP
+sniff(filter="tcp",prn=packet_callback, count=10)
