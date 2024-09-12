@@ -1,8 +1,12 @@
 from scapy.all import sniff
 
-# packer capture
+# packer capture and show details
 def packet_callback(packet):
-    print(packet.summary())
+    if packet.haslayer("IP"):
+        print(f"Source IP: {packet['IP'].src}")
+        print(f"Destination IP: {packet['IP'].dst}")
+        print(f"Protocol: {packet['IP'].proto}")
+        print("-" * 50)
 
 # capture packet in network interface
 sniff(prn=packet_callback, count=10)
