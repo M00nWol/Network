@@ -12,6 +12,12 @@ tcp_count = 0
 udp_count = 0
 icmp_count = 0
 
+# Data for plotting (these lists will be accessed by gui_interface.py)
+time_values = []
+tcp_values = []
+udp_values = []
+icmp_values = []
+
 # handle packets
 def packet_callback(packet):
     global tcp_count, udp_count, icmp_count
@@ -41,6 +47,12 @@ def packet_callback(packet):
         elif packet.haslayer(ICMP):
             icmp_count += 1
 
+        # 시각화를 위한 변수 설정
+        time_values.append(len(time_values))
+        tcp_values.append(tcp_count)
+        udp_values.append(udp_count)
+        icmp_values.append(icmp_count)
+
         # 패킷 정보 뽑아내기
         print(f"Source IP: {src_ip}, Destination IP: {dst_ip}")
         if src_port and dst_port:
@@ -50,12 +62,10 @@ def packet_callback(packet):
         print(f"TCP: {tcp_count}, UDP: {udp_count}, ICMP: {icmp_count}")
         print("-"*50)
 
-# capture packet
-# GUI 사용 안 할 때를 대비해 count와 filter 설정한 것
+
 # => GUI 코드와 독립적으로 실행 가능
 def start_capture(count=10, filter="tcp"):
     sniff(filter=filter,prn=packet_callback, count=count)
-
     # save packets as pcap file
     wrpcap("./captured_packets.pcap", packets)
 
